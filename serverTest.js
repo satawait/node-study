@@ -1,4 +1,5 @@
 const Koa = require('./simpleKoa')
+const url = require('url')
 const app = new Koa()
 const html = `<!DOCTYPE html>
 <html lang="en">
@@ -20,7 +21,6 @@ app.use(async (ctx, next) => {
     console.log('Middleware 2 start')
     await next()
     console.log('Middleware 2 end')
-    ctx
     ctx.body = html
 })
 
