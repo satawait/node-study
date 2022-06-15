@@ -25,3 +25,7 @@
 ## __dirname 当前绝对路径  path.join(__dirname, '/static', url.pathname)
 
 ## mime.getType('css') // 获取文件类型 text/css
+
+## express req.query req.body app.use(express.urlencoded({extended: false})) app.use(express.json())
+
+## res.send res.json res.render
