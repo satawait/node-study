@@ -1,6 +1,16 @@
 const express = require('express')
 
 const app = express()
+const ejsRouter = express.Router()
+
+app.set('views' , './views')
+app.set('view engine', 'ejs')
+// app.set('view engine', 'html') // 支持直接渲染html文件
+// app.engine('html', require('ejs').renderFile)
+
+app.use(express.static('static'))
+
+app.use('/static', express.static('static'))
 
 const homeRouter = express.Router()
 const apiRouter = express.Router()
@@ -72,10 +82,29 @@ apiRouter.post('/aaa', (req, res) => {
 })
 app.use('/api', apiRouter)
 
-// 错误中间件
+ejsRouter.get('/home', (req, res) => {
+    res.render('home', { list: [1, '<p>2</p>', 3] })
+})
+// ejsRouter.get('/apilogin', (req, res) => {
+//     res.send('通过啦！')
+// })
 
+ejsRouter.get('/login', (req, res) => {
+    res.render('login', {title: 123})
+})
+ejsRouter.post('/login', (req, res) => {
+    console.log(req.body)
+    if (req.body.username === '123' && req.body.password === '123') {
+        res.redirect('home')
+    } else {
+        res.render('login', {title: '登录失败了'})
+    }
+})
+app.use('/ejsTest', ejsRouter)
+
+// 错误中间件
 app.use((req, res) => {
-    res.status(404).send('error')
+    res.status(404).send('not found')
 })
 
 app.listen(3000)
