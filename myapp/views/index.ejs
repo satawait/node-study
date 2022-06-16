@@ -5,7 +5,85 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <h1>mongodb测试</h1>
+    <div>
+      <div>
+        用户名<input type="text" name="username" id="username">
+      </div>
+      <div>
+        密码<input type="password" name="password" id="password">
+      </div>
+      <div>
+        <input type="button" value="注册" id="register">
+      </div>
+      <div>
+        <input type="button" value="更新" id="update">
+      </div>
+      <div>
+        <input type="button" value="删除" id="delete">
+      </div>
+      <div>
+        <input type="button" value="获取列表" id="getList">
+      </div>
+      <script>
+        const username = document.querySelector('#username')
+        const password = document.querySelector('#password')
+        const registerBtn = document.querySelector('#register')
+        const updateBtn = document.querySelector('#update')
+        const deleteBtn = document.querySelector('#delete')
+        const getList = document.querySelector('#getList')
+
+        registerBtn.onclick = () => {
+          console.log(username.value, password.value)
+          fetch('/users/api', {
+            method: 'POST',
+            body: JSON.stringify({
+              username: username.value,
+              password: password.value
+            }),
+            headers: {
+              'COntent-Type': 'application/json'
+            }
+          }).then(res => res.json()).then(res => {
+            console.log(res)
+          })
+        }
+        updateBtn.onclick = () => {
+          console.log(username.value, password.value)
+          fetch('/users/api', {
+            method: 'PUT',
+            body: JSON.stringify({
+              username: username.value,
+              password: password.value
+            }),
+            headers: {
+              'COntent-Type': 'application/json'
+            }
+          }).then(res => res.json()).then(res => {
+            console.log(res)
+          })
+        }
+        deleteBtn.onclick = () => {
+          console.log(username.value, password.value)
+          fetch('/users/api', {
+            method: 'DELETE',
+            body: JSON.stringify({
+              username: username.value,
+              password: password.value
+            }),
+            headers: {
+              'COntent-Type': 'application/json'
+            }
+          }).then(res => res.json()).then(res => {
+            console.log(res)
+          })
+        }
+        getList.onclick = () => {
+          fetch('/users/api').then(res => res.json()).then(res => {
+            console.log(res)
+          })
+        }
+      </script>
+    </div>
   </body>
 </html>
