@@ -11,9 +11,13 @@ app.set('view engine', 'ejs')
 
 app.use(express.static('static'))
 
-app.use('static', express.static('static'))
+app.use('/static', express.static('static'))
 
-app.use(express.urlencoded({extended: false}))
+const homeRouter = express.Router()
+const apiRouter = express.Router()
+
+// 配置解析post参数中间件
+app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
 app.use(cookieParser())
@@ -45,11 +49,17 @@ app.get('/a(bc)?d', (req, res) => {
     })
 })
 
+// 应用级别
+app.use([func1])
+
+app.use('/adccc', [func1])
+
 app.get('/adccc', [func1, func2])
 
 function func1(req, res, next) {
     const valid = true
     if (valid) {
+        console.log('验证')
         next()
     } else {
         res.send('error')
@@ -59,6 +69,21 @@ function func1(req, res, next) {
 function func2(req, res, next) {
     res.send('hello!')
 }
+
+//路由级别
+homeRouter.get('/aaa', (req, res) => {
+    res.send('home')
+})
+app.use('/home', homeRouter)
+
+apiRouter.get('/aaa', (req, res) => {
+    res.send('api')
+})
+apiRouter.post('/aaa', (req, res) => {
+    console.log(req.body)
+    res.send({test: 2})
+})
+app.use('/api', apiRouter)
 
 ejsRouter.get('/home', (req, res) => {
     res.render('home', { list: [1, '<p>2</p>', 3] })
@@ -82,6 +107,7 @@ ejsRouter.post('/login', (req, res) => {
 })
 app.use('/ejsTest', ejsRouter)
 
+// 错误中间件
 app.use((req, res) => {
     res.status(404).send('not found')
 })
