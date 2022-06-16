@@ -2,6 +2,7 @@ const express = require('express')
 
 const app = express()
 const ejsRouter = express.Router()
+const cookieParser = require('cookie-parser')
 
 app.set('views' , './views')
 app.set('view engine', 'ejs')
@@ -14,6 +15,8 @@ app.use('static', express.static('static'))
 
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
+
+app.use(cookieParser())
 
 app.get('/', (req, res) => {
     res.send('hello world')
@@ -65,10 +68,12 @@ ejsRouter.get('/home', (req, res) => {
 // })
 
 ejsRouter.get('/login', (req, res) => {
+    console.log(req.cookies)
+    res.cookie('gender', 'male')
     res.render('login', {title: 123})
 })
 ejsRouter.post('/login', (req, res) => {
-    console.log(req.body)
+    console.log(req.cookies)
     if (req.body.username === '123' && req.body.password === '123') {
         res.redirect('home')
     } else {
