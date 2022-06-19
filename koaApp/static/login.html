@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>登录</title>
+  </head>
+  <body>
+    <h1>测试</h1>
+    <div>
+      <div>
+        用户名<input type="text" name="username" id="username">
+      </div>
+      <div>
+        密码<input type="password" name="password" id="password">
+      </div>
+      <div>
+        <input type="button" value="登录" id="login">
+      </div>
+      <script>
+        const username = document.querySelector('#username')
+        const password = document.querySelector('#password')
+        const loginBtn = document.querySelector('#login')
+
+        loginBtn.onclick = () => {
+          console.log(username.value, password.value)
+          fetch(`/user?username=${username.value}&password=${password.value}`, {
+            method: 'POST',
+            // body: JSON.stringify({
+            //   username: username.value,
+            //   password: password.value
+            // }),
+            body: `username=${username.value}&password=${password.value}`,
+            headers: {
+              // 'COntent-Type': 'application/json'
+              'COntent-Type': 'application/x-www-form-urlencoded'
+            }
+          }).then(res => res.json()).then(res => {
+            console.log(res)
+          })
+        }
+      </script>
+    </div>
+  </body>
+</html>
