@@ -1,8 +1,30 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title>欢迎</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+      // 拦截器
+      axios.interceptors.request.use(config => {
+        const authorization = localStorage.getItem('authorization')
+        config.headers.authorization = `Bearer ${authorization}`
+        return config
+      }, error => {
+        return Promise.reject(error)
+      })
+      axios.interceptors.response.use(response => {
+        console.log(response)
+        return response
+      }, error => {
+        console.log(error)
+        if (error.response.status === 401) {
+          localStorage.removeItem('authorization')
+          location.href = '/login'
+        }
+        return Promise.reject(error)
+      })
+    </script>
   </head>
   <body>
     <h1>mongodb测试</h1>
@@ -12,6 +34,9 @@
       </div>
       <div>
         密码<input type="password" name="password" id="password">
+      </div>
+      <div>
+        头像<input type="file" name="file" id="file">
       </div>
       <div>
         <input type="button" value="注册" id="register">
@@ -25,6 +50,9 @@
       <div>
         <input type="button" value="获取列表" id="getList">
       </div>
+      <div>
+        <input type="button" value="登出" id="logout">
+      </div>
       <script>
         const username = document.querySelector('#username')
         const password = document.querySelector('#password')
@@ -32,56 +60,80 @@
         const updateBtn = document.querySelector('#update')
         const deleteBtn = document.querySelector('#delete')
         const getList = document.querySelector('#getList')
+        const logoutBtn = document.querySelector('#logout')
+        const file = document.querySelector('#file')
 
         registerBtn.onclick = () => {
           console.log(username.value, password.value)
-          fetch('/users/api', {
-            method: 'POST',
-            body: JSON.stringify({
-              username: username.value,
-              password: password.value
-            }),
+          // axios.post('/users/api', {
+          //     username: username.value,
+          //     password: password.value
+          //   }).then(res => {
+          //   console.log(res.data)
+          //   // if (!res.data.res) {
+          //   //   location.href = '/login'
+          //   // }
+          // })
+          const formsData = new FormData()
+          formsData.append('username', username.value)
+          formsData.append('password', password.value)
+          formsData.append('file', file.files[0])
+          axios.post('/users/api/upload', formsData, {
             headers: {
-              'COntent-Type': 'application/json'
+              'Content-Type': 'multipart/form-data'
             }
-          }).then(res => res.json()).then(res => {
-            console.log(res)
+          }).then(res => {
+            console.log(res.data)
+            // if (!res.data.res) {
+            //   location.href = '/login'
+            // }
           })
         }
         updateBtn.onclick = () => {
           console.log(username.value, password.value)
-          fetch('/users/api', {
-            method: 'PUT',
-            body: JSON.stringify({
+          axios.put('/users/api', {
               username: username.value,
               password: password.value
-            }),
-            headers: {
-              'COntent-Type': 'application/json'
-            }
-          }).then(res => res.json()).then(res => {
-            console.log(res)
+            }).then(res => {
+            console.log(res.data)
+            // if (!res.data.res) {
+            //   location.href = '/login'
+            // }
           })
         }
         deleteBtn.onclick = () => {
           console.log(username.value, password.value)
-          fetch('/users/api', {
-            method: 'DELETE',
-            body: JSON.stringify({
+          axios.delete('/users/api', {
               username: username.value,
               password: password.value
-            }),
-            headers: {
-              'COntent-Type': 'application/json'
-            }
-          }).then(res => res.json()).then(res => {
-            console.log(res)
+            }).then(res => {
+            console.log(res.data)
+            // if (!res.data.res) {
+            //   location.href = '/login'
+            // }
           })
         }
         getList.onclick = () => {
-          fetch('/users/api').then(res => res.json()).then(res => {
-            console.log(res)
+          axios.get('/users/api').then(res => {
+            console.log(res.data)
+            // if (res.data.res === 0) {
+            //   location.href = '/login'
+            // }
           })
+        }
+        logoutBtn.onclick = () => {
+          // console.log(username.value, password.value)
+          // axios.post('/login/api/logout', {
+          //     username: username.value,
+          //     password: password.value
+          //   }).then(res => {
+          //   if (res.data.res) {
+          //     console.log(res.data)
+          //     location.href = '/login'
+          //   }
+          // })
+          localStorage.removeItem('authorization')
+          location.href = '/login'
         }
       </script>
     </div>

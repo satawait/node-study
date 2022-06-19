@@ -5,6 +5,11 @@ const UserService = {
             params
         )
     },
+    loginUser: params => {
+        return UserModel.find(
+            params
+        )
+    },
     updateUser: params => {
         return UserModel.updateOne(
             params.a,

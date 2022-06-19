@@ -29,3 +29,5 @@
 ## express req.query req.body app.use(express.urlencoded({extended: false})) app.use(express.json())
 
 ## res.send res.json res.render
+
+## express 线性模式 koa 洋葱模式
