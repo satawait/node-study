@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聊天室</title>
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+</head>
+<body>
+    <h1>聊天室</h1>
+    <input type="text" name="msg" id="msg">
+    <input type="button" value="send" id="send">
+    <select name="list" id="list">
+        <option value="all">all</option>
+    </select>
+    <script>
+        const WebSocketType = {
+            ERROR: 0,
+            SUCCESS: 1,
+            GROUPLIST: 2,
+            GROUPCHAT: 3,
+            SINGLECHAT: 4
+        }
+        const list = document.querySelector('#list')
+        const send = document.querySelector('#send')
+        const msg = document.querySelector('#msg')
+        // 建立 socketio连接
+        const socket = io(`ws://127.0.0.1:4004?token=${localStorage.getItem('authorization')}`) // 默认连接3000端口
+        socket.on(WebSocketType.GROUPCHAT, data => {
+            const msg = JSON.parse(data)
+            console.log(msg.user, msg.data)
+        })
+        socket.on(WebSocketType.ERROR, data => {
+            const msg = JSON.parse(data)
+            localStorage.removeItem('authorization')
+            location.href = '/login'
+        })
+        socket.on(WebSocketType.GROUPLIST, data => {
+            const msg = JSON.parse(data)
+            console.log(msg.user, msg.data)
+            list.innerHTML = ''
+            list.innerHTML = ['all', ...msg.data].map(user => `<option value="${user}">${user}</option>`).join('')
+        })
+        socket.on(WebSocketType.SINGLECHAT, data => {
+            const msg = JSON.parse(data)
+            console.log(msg.user, msg.data)
+        })
+        send.onclick = () => {
+            const message = msg.value
+            if (list.value === 'all') {
+                ws.send(createMessage(WebSocketType.GROUPCHAT, null, message))
+            } else {
+                ws.send(createMessage(WebSocketType.SINGLECHAT, list.value, message))
+            }
+        }
+        function createMessage(type, user, data) {
+            return JSON.stringify({
+                type,
+                user,
+                data
+            })
+        }     
+    </script>
+</body>
+</html>

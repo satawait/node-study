@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聊天室</title>
+</head>
+<body>
+    <h1>聊天室</h1>
+    <input type="text" name="msg" id="msg">
+    <input type="button" value="send" id="send">
+    <select name="list" id="list">
+        <option value="all">all</option>
+    </select>
+    <script>
+        const WebSocketType = {
+            ERROR: 0,
+            SUCCESS: 1,
+            GROUPLIST: 2,
+            GROUPCHAT: 3,
+            SINGLECHAT: 4
+        }
+        const list = document.querySelector('#list')
+        const send = document.querySelector('#send')
+        const msg = document.querySelector('#msg')
+
+        send.onclick = () => {
+            const message = msg.value
+            if (list.value === 'all') {
+                ws.send(createMessage(WebSocketType.GROUPCHAT, null, message))
+            } else {
+                ws.send(createMessage(WebSocketType.SINGLECHAT, list.value, message))
+            }
+        }
+        function createMessage(type, user, data) {
+            return JSON.stringify({
+            type,
+            user,
+            data
+            })
+        }
+        // 带token建立连接
+        const ws = new WebSocket(`ws://127.0.0.1:8080?token=${localStorage.getItem('authorization')}`)
+        ws.onopen = () => {
+            console.log('连接成功')
+        }
+        ws.onmessage = msg => {
+            const data = JSON.parse(msg.data)
+            switch (data.type) {
+                case WebSocketType.GROUPLIST:
+                    console.log(data.data)
+                    list.innerHTML = ''
+                    list.innerHTML = ['all', ...JSON.parse(data.data)].map(user => `<option value="${user}">${user}</option>`).join('')
+                    break;
+                case WebSocketType.GROUPCHAT:
+                    console.log(`${data.user}广播${data.data}`)
+                    break;
+                case WebSocketType.SINGLECHAT:
+                    console.log(`${data.user}私聊${data.data}`)
+                    break;
+                case WebSocketType.SUCCESS:
+                
+                    break;
+                case WebSocketType.ERROR:
+                    localStorage.removeItem('authorization')
+                    location.href = '/login'
+                    break;
+                default:
+                    break;
+            }
+            // ws.send('hello')
+        }
+        ws.onerror = err => {
+            console.log(err)
+        }
+    </script>
+</body>
+</html>

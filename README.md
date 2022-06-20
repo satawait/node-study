@@ -2,15 +2,17 @@
 
 ## nodemon 重启
 
+## res.write('string | file', 'utf-8') res.wrhteHead({ 'Content-Type': 'text/html' }) res.end()
+
 ## https.get get请求
 
 ## https.request(options, res => {}) post请求
 
-## cheerio 爬虫 cheerio.load('<ul id = "fruits">...</ul>')
+## cheerio 爬虫 cheerio.load('<ul id = "fruits">...</ul>')  on 'data' on 'end'
 
 ## events 事件总线
 
-## fs writeFile appendFile  readFile unlink 删文件 mkdir rmdir readdir stat fs.promises existsSync 是否存在
+## fs writeFile appendFile  readFile unlink 删文件 mkdir rmdir readdir stat fs.promises existsSync 是否存在 on 'data' on 'end'
 
 ## createReadStream createWriteStream readStream.pipe(writeStream) res是可写流 gzip = zlib.createGzip() content-encoding: gzip
 
@@ -31,3 +33,5 @@
 ## res.send res.json res.render
 
 ## express 线性模式 koa 洋葱模式
+
+## mysql 外键约束 cascade set null no action restrict
