@@ -28,6 +28,10 @@
         // 建立 socketio连接
         const socket = io(`ws://127.0.0.1:4004?token=${localStorage.getItem('authorization')}`) // 默认连接3000端口
         socket.on(WebSocketType.GROUPCHAT, data => {
+            const token = localStorage.getItem('authorization')
+            if (!token) {
+                location.href = '/login'
+            }
             const msg = JSON.parse(data)
             console.log(msg.user, msg.data)
         })
@@ -37,28 +41,36 @@
             location.href = '/login'
         })
         socket.on(WebSocketType.GROUPLIST, data => {
+            const token = localStorage.getItem('authorization')
+            if (!token) {
+                location.href = '/login'
+            }
             const msg = JSON.parse(data)
             console.log(msg.user, msg.data)
             list.innerHTML = ''
             list.innerHTML = ['all', ...msg.data].map(user => `<option value="${user}">${user}</option>`).join('')
         })
         socket.on(WebSocketType.SINGLECHAT, data => {
+            const token = localStorage.getItem('authorization')
+            if (!token) {
+                location.href = '/login'
+            }
             const msg = JSON.parse(data)
             console.log(msg.user, msg.data)
         })
         send.onclick = () => {
             const message = msg.value
             if (list.value === 'all') {
-                ws.send(createMessage(WebSocketType.GROUPCHAT, null, message))
+                socket.emit(WebSocketType.GROUPCHAT, createMessage(null, message))
             } else {
-                ws.send(createMessage(WebSocketType.SINGLECHAT, list.value, message))
+                socket.emit(WebSocketType.SINGLECHAT, createMessage(list.value, message))
             }
         }
-        function createMessage(type, user, data) {
+        function createMessage(user, data) {
             return JSON.stringify({
-                type,
                 user,
-                data
+                data,
+                token: localStorage.getItem('authorization')
             })
         }     
     </script>

@@ -7,11 +7,11 @@
 var app = require('../app');
 var debug = require('debug')('myapp:server');
 var http = require('http');
+require('../config/db.config.js')
 // require('./websocketServer.js')
 const ioServer = require('./socketIOServer')
 
 
-require('../config/db.config.js')
 
 /**
  * Get port from environment and store in Express.

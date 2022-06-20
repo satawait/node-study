@@ -14,19 +14,47 @@ function start(server) {
             // }, '1h')
             socket.user = token
             socket.emit(WebSocketType.GROUPCHAT, createMessage(socket.user.username, 'welcome'))
-            sendAll(ioServer, createMessage(null, Array.from(ioServer.sockets.sockets).map(item => item[1].user.username)))
+            sendAll(ioServer, createMessage(null, Array.from(ioServer.sockets.sockets).filter(item => item[1].user).map(item => item[1].user.username)))
         } else {
             socket.emit(WebSocketType.ERROR, createMessage(socket?.user?.username, 'error'))
         }
-    })
-    ioServer.on(WebSocketType.GROUPLIST, data => {
-       ioServer.emit(WebSocketType.GROUPLIST, createMessage(null, Array.from(ioServer.sockets.sockets).map(item => tiem[1].user)))
-    })
-    ioServer.on(WebSocketType.GROUPCHAT, data => {
-        
-    })
-    ioServer.on(WebSocketType.SINGLECHAT, data => {
-        
+        socket.on(WebSocketType.GROUPLIST, data => {
+          const msg = JSON.parse(data)
+          const token = JWT.verify(msg.token)
+          if (token) {
+            socket.user = token
+            socket.emit(WebSocketType.GROUPLIST, createMessage(null, Array.from(ioServer.sockets.sockets).map(item => item[1].user)))
+          } else {
+            socket.emit(WebSocketType.ERROR, createMessage(socket?.user?.username, 'error'))
+          }
+        })
+        socket.on(WebSocketType.GROUPCHAT, data => {
+          const msg = JSON.parse(data)
+          const token = JWT.verify(msg.token)
+          if (token) {
+            socket.user = token
+            console.log(msg)
+            socket.broadcast.emit(WebSocketType.GROUPCHAT, createMessage(socket.user.username, msg.data))
+          } else {
+            socket.emit(WebSocketType.ERROR, createMessage(socket?.user?.username, 'error'))
+          }
+        })
+        socket.on(WebSocketType.SINGLECHAT, data => {
+          const msg = JSON.parse(data)
+          const token = JWT.verify(msg.token)
+          if (token) {
+            socket.user = token
+            const toSocket = Array.from(ioServer.sockets.sockets).map(item => item[1]).find(item => item.user.username === msg.user)
+            if(toSocket) {
+              toSocket.emit(WebSocketType.SINGLECHAT, createMessage(socket.user.username, msg.data))
+            }
+          } else {
+            socket.emit(WebSocketType.ERROR, createMessage(socket?.user?.username, 'error'))
+          }
+        })
+        socket.on('disconnect', () => {
+          sendAll(ioServer, createMessage(null, Array.from(ioServer.sockets.sockets).map(item => item[1].user.username)))
+        })
     })
 }
 
