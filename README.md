@@ -12,6 +12,8 @@
 
 ## events 事件总线
 
+## path.basename(path) 获取文件名 path.extname(path) 获取扩展名
+
 ## fs writeFile appendFile  readFile unlink 删文件 mkdir rmdir readdir stat fs.promises existsSync 是否存在 on 'data' on 'end'
 
 ## createReadStream createWriteStream readStream.pipe(writeStream) res是可写流 gzip = zlib.createGzip() content-encoding: gzip
@@ -35,3 +37,7 @@
 ## express 线性模式 koa 洋葱模式
 
 ## mysql 外键约束 cascade set null no action restrict
+
+## http-proxy-middleware
+
+## assert.strictEqual(sum(1, 2), 6)  异步断言回调done() 也可用async await  supertest(server).get('/').expect('Content-type', /text\/html/)  钩子函数 after(() => server.close()) before(() => server.listen(3000)) beforeEach afterEach
