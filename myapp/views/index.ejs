@@ -114,7 +114,7 @@
           })
         }
         getList.onclick = () => {
-          axios.get('/users/api').then(res => {
+          axios.get(`/users/api?username=${username.value}`).then(res => {
             console.log(res.data)
             // if (res.data.res === 0) {
             //   location.href = '/login'

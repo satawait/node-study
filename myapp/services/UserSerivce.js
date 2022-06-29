@@ -22,7 +22,8 @@ const UserService = {
           )
     },
     getUser: params => {
-       return UserModel.find(params.a, params.b).skip(1).limit(2).sort({username: -1})
+        return UserModel.find(params.a, params.b).limit(1)
+    //    return UserModel.find(params.a, params.b).skip(1).limit(2).sort({username: -1})
     }
 }
 

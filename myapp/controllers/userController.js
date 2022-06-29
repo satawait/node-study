@@ -16,12 +16,12 @@ const UserController = {
         ).then(data => {
             console.log(data)
             res.send({
-                res: 'ok'
+                res: 1
             });
         }).catch(e => {
             console.log(e)
             res.send({
-                res: 'error'
+                res: 0
             });
         })
     },
@@ -46,7 +46,8 @@ const UserController = {
                 // token返回在header中
                 res.header('authorization', token)
                 res.send({
-                    res: 1
+                    res: 1,
+                    authorization: token
                 });
             } else {
                 res.send({
@@ -76,7 +77,7 @@ const UserController = {
         UserService.updateUser({ a: { username }, b:{ password }}).then(data => {
             console.log(data)
             res.send({
-                res: 'ok'
+                res: 1
             });
         }).catch(e => {
             console.log(e)
@@ -94,12 +95,12 @@ const UserController = {
         UserService.deleteUser({ username }).then(data => {
             console.log(data)
             res.send({
-                res: 'ok'
+                res: 1
             });
         }).catch(e => {
             console.log(e)
             res.send({
-                res: 'error'
+                res: 0
             });
         })
     },
@@ -107,13 +108,16 @@ const UserController = {
         // 插入数据库
         // 创建user模型--users数据库集合
         // user.create user.find user.delete user.update
-        UserService.getUser({ a: {}, b: ['username', 'password'] }).then(data => {
+        // console.log(req.query)
+        const { username, password } = req.query
+        console.log(username, password)
+        UserService.getUser({ a: {username }, b: ['username', 'password', 'file'] }).then(data => {
             console.log(data)
             res.send(data);
         }).catch(e => {
             console.log(e)
             res.send({
-                res: 'error'
+                res: []
             });
         })
     }
