@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 const UserType = {
     username: String,
     password: String,
-    avatar: String
+    file: String
 }
 
 const UserModel = mongoose.model('user', new Schema(UserType))

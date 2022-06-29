@@ -3,16 +3,16 @@ const JWT = require('../util/JWT')
 
 const UserController = {
     addUser: (req, res, next) => {
-        let avatar
+        let file
         if (req.file) {
-            avatar = req.file.filename
+            file = req.file.filename
         }
         // 插入数据库
         // 创建user模型--users数据库集合
         // user.create user.find user.delete user.update
         const { username, password } = req.body
         UserService.addUser(
-            { username, password, avatar }
+            { username, password, file }
         ).then(data => {
             console.log(data)
             res.send({
@@ -42,7 +42,7 @@ const UserController = {
                 const token = JWT.generate({
                     _id: data[0]._id,
                     username: data[0].username
-                }, "1h")
+                }, "1m")
                 // token返回在header中
                 res.header('authorization', token)
                 res.send({
@@ -75,7 +75,7 @@ const UserController = {
         // user.create user.find user.delete user.update
         const { username, password } = req.body
         UserService.updateUser({ a: { username }, b:{ password }}).then(data => {
-            console.log(data)
+            console.log(data, 22222)
             res.send({
                 res: 1
             });
