@@ -42,8 +42,9 @@ const UserController = {
                 const token = JWT.generate({
                     _id: data[0]._id,
                     username: data[0].username
-                }, "1m")
+                }, "1h")
                 // token返回在header中
+                res.cookie('authorization', token)
                 res.header('authorization', token)
                 res.send({
                     res: 1,
@@ -93,10 +94,16 @@ const UserController = {
         // user.create user.find user.delete user.update
         const { username, password } = req.body
         UserService.deleteUser({ username }).then(data => {
-            console.log(data)
-            res.send({
-                res: 1
-            });
+            console.log(data, 1111)
+            if (data.deletedCount) {
+                res.send({
+                    res: 1
+                });
+            } else {
+                res.send({
+                    res: 0
+                });
+            }
         }).catch(e => {
             console.log(e)
             res.send({
