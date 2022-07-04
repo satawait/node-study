@@ -17,6 +17,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
       - ./.docker/mongo_data:/data/db
+    networks:
+      - default
     # docker exec -it mongo mongo
     # use demo db.auth('root', 'example')
     # db.createUser({ user: 'root', pwd: 'example', roles: [ { role: "dbOwner", db: "demo" } ] });
@@ -31,3 +33,7 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+networks:
+  default:
+    external:
+      name: my-app_default

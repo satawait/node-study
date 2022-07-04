@@ -39,7 +39,7 @@ app.use(session({
   saveUninitialized: true,
   rolling: true,
   store: mongoStore.create({
-    mongoUrl: 'mongodb://root:example@127.0.0.1:27017/myapp_session',
+    mongoUrl: 'mongodb://root:example@mongo:27017/myapp_session',
     ttl: 1000 * 60 * 60
   })
 }))

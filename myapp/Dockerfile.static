@@ -11,6 +11,6 @@ RUN yarn
 ADD . /code
 
 # 启动 Node Server
-CMD npm build
+CMD npm run build
 
 EXPOSE 4004
