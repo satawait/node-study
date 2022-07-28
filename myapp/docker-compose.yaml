@@ -1,14 +1,17 @@
 version: "3"
 services:
   node-app:
+    container_name: 'nodeServer'
     build:
       context: .
       dockerfile: Dockerfile.static
     ports:
-      - 4004:4004
+      # docker-compose up --scale node-app=3
+      # - "4004-4006:4004"
+      - "4004:4004"
     labels:
       # 为 cra 配置我们的自定义域名
-      - "traefik.http.routers.cra.rule=Host(`node.server.local`)"
+      - "traefik.http.routers.cra.rule=Host(`node.app.local`)"
       # 设置 https，此时我们的 certresolver 为 le，与上篇文章配置保持一致
       - traefik.http.routers.cra.tls=true
       - traefik.http.routers.cra.tls.certresolver=le
