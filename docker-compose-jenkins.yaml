@@ -1,0 +1,23 @@
+version: '3'
+services:
+    jenkins:
+        image: jenkins/jenkins:lts
+        container_name: jenkins
+        environment:
+            - TZ=Asia/Shanghai
+        volumes:
+            - ./.docker/jenkins/jenkins_home:/var/jenkins_home
+            # - /var/run/docker.sock:/var/run/docker.sock
+            # - /usr/bin/docker:/usr/bin/docker
+            # - /usr/lib/x86_64-linux-gnu/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7
+        ports:
+            - "8880:8080"
+            - "50550:50000"
+        privileged: true
+        user: root
+        restart: always
+networks:
+  default:
+    external:
+      name: cra-test_default
+      #  name: my-app_default
