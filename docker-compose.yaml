@@ -36,4 +36,5 @@ services:
 networks:
   default:
     external:
-      name: my-app_default
+      name: cra-test_default
+      #  name: my-app_default
