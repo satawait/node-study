@@ -1,3 +1,5 @@
+# docker logs -f jenkins
+# 查看密码
 version: '3'
 services:
     jenkins:
@@ -16,8 +18,16 @@ services:
         privileged: true
         user: root
         restart: always
+    nginx:
+        image: nginx:alpine
+        container_name: nginx
+        ports:
+            - 4000:80
+        volumes:
+            - ./nginx.conf:/etc/nginx/conf.d/default.conf
+            - ./.docker/jenkins/jenkins_home/dist/build:/usr/share/nginx/html
 networks:
   default:
     external:
-      name: cra-test_default
-      #  name: my-app_default
+    #   name: cra-test_default
+       name: my-app_default
